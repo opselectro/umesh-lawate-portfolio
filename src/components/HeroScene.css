@@ -1,0 +1,79 @@
+/* =====================================================
+   HERO SCENE — borderless 3D network globe
+   The canvas bleeds past its box and is masked into the
+   page background, so there is no frame or edge anywhere.
+===================================================== */
+.hero-orb {
+  position: relative;
+  justify-self: center;
+  width: 100%;
+  /* never taller than the visible screen, so it is always fully in view */
+  max-width: min(720px, calc(100svh - 150px));
+  min-width: 280px;
+  aspect-ratio: 1;
+  cursor: crosshair;
+  -webkit-tap-highlight-color: transparent;
+  animation: orb-in 1.2s cubic-bezier(.2, .7, .2, 1) both;
+}
+
+/* ambient light that melts the globe into the page */
+.hero-orb::before {
+  position: absolute;
+  inset: -22%;
+  z-index: 0;
+  content: "";
+  pointer-events: none;
+  background:
+    radial-gradient(closest-side, color-mix(in oklab, var(--portfolio-lime) 15%, transparent), color-mix(in oklab, var(--portfolio-lime) 5%, transparent) 55%, transparent 100%),
+    radial-gradient(38% 38% at 74% 28%, color-mix(in oklab, var(--portfolio-teal) 11%, transparent), transparent 100%),
+    radial-gradient(34% 34% at 24% 76%, color-mix(in oklab, var(--portfolio-orange) 8%, transparent), transparent 100%);
+  animation: orb-breathe 7s ease-in-out infinite;
+}
+
+.hero-orb canvas {
+  position: absolute;
+  top: -12%;
+  left: -12%;
+  z-index: 1;
+  display: block;
+  width: 124%;
+  height: 124%;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(closest-side, #000 60%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 60%, transparent 100%);
+}
+
+.orb-hint {
+  position: absolute;
+  right: 0;
+  bottom: -1%;
+  left: 0;
+  z-index: 2;
+  margin: 0;
+  color: var(--portfolio-dim);
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-align: center;
+  text-transform: uppercase;
+  pointer-events: none;
+  opacity: .8;
+}
+.orb-hint i { margin: 0 6px; color: var(--portfolio-lime); font-style: normal; }
+.orb-hint .hint-touch { display: none; }
+@media (hover: none) {
+  .orb-hint .hint-mouse { display: none; }
+  .orb-hint .hint-touch { display: inline; }
+}
+
+@keyframes orb-in { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: scale(1); } }
+@keyframes orb-breathe { 0%, 100% { opacity: .7; } 50% { opacity: 1; } }
+
+@media (max-width: 680px) {
+    .hero-orb {
+    display: none !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb, .hero-orb::before { animation: none !important; }
+}
